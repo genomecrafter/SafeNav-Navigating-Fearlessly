@@ -6,7 +6,13 @@
     <link rel="stylesheet" href="map.css">
     <link rel="icon" type="image/x-icon" href="icon.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
+    <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
+  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.0/mapbox-gl-directions.js"></script>
+  <link
+    rel="stylesheet"
+    href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.0/mapbox-gl-directions.css"
+    type="text/css"/>
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> -->
     <title>SafeNav</title>
 </head>
@@ -18,17 +24,17 @@
             <div class="left-container-1">
                 <img src="Safe.png" alt="Labels" class="image">
             </div>
-            <div class="left-container-2">
+            <!-- <div class="left-container-2">
                 <div class="content-wrapper">
-                    <h2>Get Directions</h2>
+                    
                     <div class="location-inputs">
                         <input id="origin" type="text" placeholder="Start location">
                         <input id="destination" type="text" placeholder="Destination">
                     </div>
-                    <button class="get-directions">Get Directions</button>
+                    <button class="get-directions">Get directions</button>
                 </div>
-            </div>
-            <div class="left-container-3">
+            </div> -->
+            <div class="left-container-2">
                     <span type="text">Time</span>
                     <div id="currentTime"></div>
                     <script>
@@ -56,7 +62,7 @@
                             updateTime();
                     </script>
             </div>
-            <div class="left-container-4">
+            <div class="left-container-3">
                 <!-- Contact icons container -->
                 <div class="contact-icons">
                     <style>
@@ -74,11 +80,11 @@
                             color: #333;
                         }
                     </style>
-                    <!-- Call John Doe -->
+                    
                     <a href="tel:9880737876">
                         <i class="fas fa-phone"></i>
                     </a>
-                    <!-- Message Jane Doe -->
+                    
                     <a href="sms:9880737876">
                         <i class="fas fa-envelope"></i>
                     </a>
@@ -89,7 +95,7 @@
                 </div>
                 
             </div>
-            <div class="left-container-5">
+            <div class="left-container-4">
                 
                 <style>
                    .button-container {
@@ -144,7 +150,7 @@
 
                 
             </div>
-            <div class="left-container-6">
+            <div class="left-container-5">
                 <br>
                 <a href="Web.html" class="route1">Route 1</a>
                 <br>
@@ -152,14 +158,102 @@
                 <br>
                 <a href="Web.html" class="route2">Route 2</a>
             </div>
+            <div class="left-container-6">
+                <br>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        text-align: center;
+                        margin-top: 100px;
+                    }
+                    button {
+                        font-size: 20px;
+                        padding: 15px 30px;
+                        margin: 10px;
+                        cursor: pointer;
+                        border: none;
+                        border-radius: 5px;
+                    }
+                    #sirenButton {
+                        background-color: red;
+                        color: white;
+                    }
+                    #stopButton {
+                        background-color: black;
+                        color: white;
+                    }
+                </style>
+                <button id="sirenButton">Siren</button>
+                <button id="stopButton" disabled>Stop</button>
+                <audio id="sirenSound" src="siren.mp3"></audio>
+                <script>
+                    let clickCount = 0;
+                    let sirenTimeout;
+                    let continuousSiren = false;
+            
+                    const sirenButton = document.getElementById('sirenButton');
+                    const stopButton = document.getElementById('stopButton');
+                    const sirenSound = document.getElementById('sirenSound');
+            
+                    // Function to play siren for a certain duration
+                    function playSiren(duration) {
+                        stopSiren();  // Stop any currently playing siren
+                        sirenSound.play();
+                        stopButton.disabled = false;  // Enable stop button
+                        if (duration !== Infinity) {
+                            sirenTimeout = setTimeout(() => {
+                                sirenSound.pause();
+                                sirenSound.currentTime = 0;  // Reset sound to the beginning
+                            }, duration);
+                        } else {
+                            continuousSiren = true;
+                        }
+                    }
+            
+                    // Function to stop the siren
+                    function stopSiren() {
+                        if (sirenTimeout) clearTimeout(sirenTimeout);  // Clear timeout if exists
+                        sirenSound.pause();
+                        sirenSound.currentTime = 0;  // Reset sound to the beginning
+                        continuousSiren = false;
+                    }
+            
+                    // Handle siren button click
+                    sirenButton.addEventListener('click', () => {
+                        clickCount++;
+                        if (clickCount === 1) {
+                            playSiren(5000);  // 5 seconds
+                        } else if (clickCount === 2) {
+                            playSiren(10000);  // 10 seconds
+                        } else if (clickCount === 3) {
+                            playSiren(Infinity);  // Continuous siren
+                        }
+                    });
+            
+                    // Handle stop button click
+                    stopButton.addEventListener('click', () => {
+                        stopSiren();
+                        stopButton.disabled = true;  // Disable stop button after stopping
+                        clickCount = 0;  // Reset click count after stopping
+                    });
+            
+                    // Loop sound continuously if in continuous mode
+                    sirenSound.addEventListener('ended', () => {
+                        if (continuousSiren) {
+                            sirenSound.play();  // Restart siren when ended
+                        }
+                    });
+                </script>
+            </div>
             <div class="left-container-7">
                 <br>
                 <br>
                 <img src="Cotravellers.png">
             </div>
+
             <div class="left-container-8">
                 <br>
-               <button id="feedbackButton">Give Feedback</button>
+               <button id="feedbackButton">Feedback</button>
 
                <script>
                   const feedbackButton = document.getElementById('feedbackButton');
@@ -236,10 +330,87 @@
             </div>
             
         </div>
+        
         <!-- Big container on the right -->
         <div class="big-container">
-            <iframe src="https://www.google.com/maps/d/u/0/embed?mid=1_9TDiREkX-sUMl3MFbyquhh8Xa-YYM4&ehbc=2E312F&noprof=1" width="1250px" height="900"></iframe>
-             
+            <!-- <iframe src="https://www.google.com/maps/d/u/0/embed?mid=1_9TDiREkX-sUMl3MFbyquhh8Xa-YYM4&ehbc=2E312F&noprof=1" width="1250px" height="900"></iframe> -->
+            <style>
+                body {
+                  margin: 0;
+                }
+            
+                #map {
+                  height: 100%;
+                  width: 100%;
+                }
+            
+                .big-container {
+                  flex-grow: 1;
+                  height: 55vw;  /* Ensure full width */
+                }
+              </style>
+              <div id='map'></div>
+              <script>
+                mapboxgl.accessToken = "pk.eyJ1IjoiZGhydXRoaSIsImEiOiJjbHRpcXlzMjAwZjdiMmtxd2M0bzA5b2Q5In0.kRZRe2qbs0d3X14ndRcGZg";
+            
+                navigator.geolocation.getCurrentPosition(successLocation, errorLocation, {
+                  enableHighAccuracy: true
+                });
+            
+                const places = [
+                  { name: 'Akbar Road', rating: 3, coordinates: [28.6108, 77.2161] },
+                  { name: 'Aruna Asaf Ali Marg', rating: 2, coordinates: [28.5541, 77.1894] },
+                  { name: 'Bahadur Shah Zafar Marg', rating: 3, coordinates: [28.6291, 77.2419] },
+                  // Add more places as needed
+                ];
+            
+                const safePlaces = places.filter(place => place.rating >= 2);
+            
+                function successLocation(position) {
+                  const startCoordinates = [position.coords.longitude, position.coords.latitude];
+                  setupMap(startCoordinates);
+                }
+            
+                function errorLocation() {
+                  const defaultCoordinates = [77.50604,12.96462];
+                  setupMap(defaultCoordinates);
+                }
+            
+                function setupMap(center) {
+                  const map = new mapboxgl.Map({
+                    container: "map",
+                    style: "mapbox://styles/mapbox/streets-v11",
+                    center: center,
+                    zoom: 15
+                  });
+            
+                  const nav = new mapboxgl.NavigationControl();
+                  map.addControl(nav);
+            
+                  const directions = new MapboxDirections({
+                    accessToken: mapboxgl.accessToken,
+                    unit: 'metric',
+                    profile: 'driving',
+                    steps: true,
+                    alternatives: false
+                  });
+            
+                  map.addControl(directions, "top-left");
+            
+                  const waypoints = safePlaces.map(place => ({
+                    coordinates: place.coordinates,
+                    approach: 'unrestricted'
+                  }));
+            
+                  directions.setOrigin(center);
+                //   directions.setDestination([77.50530,12.91987]);
+            
+                  waypoints.forEach(waypoint => {
+                    directions.addWaypoint(waypoints.indexOf(waypoint), waypoint.coordinates);
+                  });
+                }
+              </script>
+
         </div>
     </div>
     
